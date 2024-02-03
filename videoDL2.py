@@ -60,18 +60,39 @@ def make_settings_file(url, file_name, output_dir, format, resolution, fps, code
 
     settings_path = os.path.join(output_dir, 'settings.txt')
     with open(settings_path, 'w') as settings_file:
+        settings_file.write("フレーム分離・キーフレーム抽出:\n")
         settings_file.write(f"Project_DIR: {project_dir_absolute_path}\n")
         settings_file.write(f"Original_Video: {original_video_path}\n")
+        settings_file.write("---------------------------------------------\n\n")
+
+        settings_file.write("タグ付け:\n")
         settings_file.write(f"Key_Dir: {key_dir}\n")
-        settings_file.write(f"Img2Img_Key_Dir: {img2img_key_dir}\n")
-        settings_file.write(f"Img2Img_Upscale_Key_Dir: {img2img_upscale_key_dir}\n")
+        settings_file.write(f"Key_Dir: {key_dir}\n")
+        settings_file.write("---------------------------------------------\n\n")
+
+        settings_file.write("img2imgプロンプト:\n")
         settings_file.write(f"Positive_Prompt_Base: {positive_prompt_base}\n")
         settings_file.write(f"Negative_Prompt_Base: {negative_prompt_base}\n")
+        settings_file.write("---------------------------------------------\n\n")
+
+        settings_file.write("画像バッチ処理:\n")
+        settings_file.write(f"Key_Dir: {key_dir}\n")
+        settings_file.write(f"Img2Img_Key_Dir: {img2img_key_dir}\n")
+        settings_file.write("---------------------------------------------\n\n")
+
+        settings_file.write("アップスケール処理:\n")
+        settings_file.write(f"Img2Img_Key_Dir: {img2img_key_dir}\n")
+        settings_file.write(f"Img2Img_Upscale_Key_Dir: {img2img_upscale_key_dir}\n")
+        settings_file.write("---------------------------------------------\n\n")
+        
+        settings_file.write("ビデオの設定:\n")
         settings_file.write(f"Video URL: {url}\n")
         settings_file.write(f"Format: {format}\n")
         settings_file.write(f"Resolution: {resolution}\n")
         settings_file.write(f"FPS: {fps}\n")
         settings_file.write(f"Codec: {codec}\n")
+        settings_file.write("---------------------------------------------\n")
+
 
 
 def download_for_anime():

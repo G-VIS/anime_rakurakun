@@ -59,14 +59,13 @@ def make_settings_file(url, file_name, output_dir, format, resolution, fps, code
     negative_prompt_base = "(nsfw2), bd,handhvd, rq, degenegative, v1_7k,sketches, (worst quality:2), (low quality:2), (normal quality:2), normal quality, (monochrome), (grayscale), see-through, skin spots, acne, skin blemishes, bad anatomy,DeepNegative, (fa1.2:1), facing away, looking away,tilted head, bad anatomy,bad hands, text, error, missing fingers,extra digits,fewer digits,cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username,blurry, bad feet,cropped, poorly drawn hands,poorly drawn face, mutation,deformed,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,extra fingers,fewer digits,extra limbs,extra arms,extra legs, malformed limbs,fused fingers,too many fingers,long neck,cross-eyed, mutated hands, bad body,bad proportions,gross proportions,text,error,missing fingers,missing arms,missing legs,extra digit, extra arms, extra limb, extra leg, extra foot"
 
     settings_path = os.path.join(output_dir, 'settings.txt')
-    with open(settings_path, 'w') as settings_file:
+    with open(settings_path, 'w', encoding='utf-8') as settings_file:
         settings_file.write("フレーム分離・キーフレーム抽出:\n")
         settings_file.write(f"Project_DIR: {project_dir_absolute_path}\n")
         settings_file.write(f"Original_Video: {original_video_path}\n")
         settings_file.write("---------------------------------------------\n\n")
 
         settings_file.write("タグ付け:\n")
-        settings_file.write(f"Key_Dir: {key_dir}\n")
         settings_file.write(f"Key_Dir: {key_dir}\n")
         settings_file.write("---------------------------------------------\n\n")
 
@@ -92,7 +91,6 @@ def make_settings_file(url, file_name, output_dir, format, resolution, fps, code
         settings_file.write(f"FPS: {fps}\n")
         settings_file.write(f"Codec: {codec}\n")
         settings_file.write("---------------------------------------------\n")
-
 
 
 def download_for_anime():

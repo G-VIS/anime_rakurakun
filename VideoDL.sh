@@ -11,4 +11,4 @@ source $VENV_DIR/bin/activate
 python3 videoDL2.py
 
 echo "Application has been executed successfully."
-read -p "Press [Enter] key to close..."
+read -p "Press enter to continue"

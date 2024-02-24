@@ -16,7 +16,7 @@ Anime_rakurakunを使用するには、以下の手順に従ってセットア�
     ```bash
     git clone https://github.com/G-VIS/anime_rakurakun.git
     ```
-
+### Windowsの場合のStep2~3
 2. クローンしたフォルダに移動し、`setup.bat`を実行して環境をセットアップします。
 
     Windowsでの実行例:
@@ -36,6 +36,21 @@ Anime_rakurakunを使用するには、以下の手順に従ってセットア�
 
     GUIを通じて、実写映像のアニメ化プロセスを管理できるようになります。
 
+## Macの場合のStep2~3
+2. クローンしたファイルに実行権限を与えます。
+   ```bash
+    chmod +x setup.sh
+    chmod +x setup.sh
+    chmod +x setup.sh
+   ```
+
+1. setup, update, use
+   ターミナルで実行します。
+   ```bash
+    sh setup.sh
+    sh update.sh
+    sh VideoDL.sh
+   ```
 ## 使用方法
 
 GUIが起動したら、画面の指示に従って映像ファイルを選択し、変換プロセスを開始してください。

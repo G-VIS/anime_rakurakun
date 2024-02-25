@@ -1,9 +1,10 @@
 import tkinter as tk
-from tkinter import messagebox, filedialog
+from tkinter import messagebox, LabelFrame, filedialog
 from yt_dlp import YoutubeDL
 import os
 import subprocess
 
+#ydlを利用してvideoをダウンロードする
 def download_video_common(url, options, post_download_action=None):
     with YoutubeDL(options) as ydl:
         ydl.download([url])
@@ -115,57 +116,115 @@ def download_for_anime():
                 os.makedirs(f'{output_dir}/{folder}')
         input_file = f'{output_dir}/{file_name}.mp4'
         output_file = f'{output_dir}/{file_name}_anime.mp4'
+
+        # ユーザーからの入力を取得
+        resolution_width = width_entry.get()
+        resolution_height = height_entry.get()
+        if not resolution_width.isdigit() or not resolution_height.isdigit():
+            messagebox.showerror("Error", "Please enter valid numbers for resolution")
+            return
+
+        # ffmpegコマンドに解像度を渡す
+        scale_option = f'scale={resolution_width}:{resolution_height}'
         subprocess.run([
-            'ffmpeg', '-i', input_file, '-vf', 'scale=1072:1920', '-r', '24', 
+            'ffmpeg', '-i', input_file, '-vf', scale_option, '-r', '24', 
             '-c:v', 'libx264', '-preset', 'medium', '-crf', '23', output_file
         ])
 
-        # Call the make_settings_file function with the appropriate parameters
-        make_settings_file(
-            url=url, 
-            file_name=file_name, 
-            output_dir=output_dir, 
-            format='MP3' if mp3_var.get() else 'MP4', 
-            resolution='1072x1920', 
-            fps='24', 
-            codec='libx264'
-        )
+        # ユーザーが設定ファイルの作成を選択した場合にのみ、make_settings_file関数を呼び出す
+        if create_settings_var.get():
+            make_settings_file(
+                url=url, 
+                file_name=file_name, 
+                output_dir=output_dir, 
+                format='MP3' if mp3_var.get() else 'MP4', 
+                resolution=f'{resolution_width}x{resolution_height}', 
+                fps='24', 
+                codec='libx264'
+            )
         messagebox.showinfo("Success", "Anime style video download and conversion completed")
 
     download_video_common(url, options, post_download)
 
 # GUI setup
+    
 root = tk.Tk()
 root.title("Video Downloader")
 
-# URL entry
-tk.Label(root, text="Enter Video URL:").grid(row=0, column=0, sticky="e")
-url_entry = tk.Entry(root, width=50)
-url_entry.grid(row=0, column=1, padx=5, pady=5)
+# Main frame-------------
+main_frame = tk.Frame(root)
+main_frame.pack(padx=10, pady=10)
+#------------------------
 
-# Save as MP3
+# URL Section------------
+url_frame = LabelFrame(main_frame, text="URL")
+url_frame.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky="ew")
+
+url_description_label = tk.Label(url_frame, text="インストールしたい動画のURLを書いてください\n")
+url_description_label.pack(side="top", fill="x",)
+
+tk.Label(url_frame, text="Enter Video URL:").pack(side="left")
+url_entry = tk.Entry(url_frame, width=50)
+url_entry.pack(side="left", padx=5)
+#------------------------
+
+# Options Section--------
+options_frame = LabelFrame(main_frame, text="Options")
+options_frame.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky="ew")
+
+options_description_label = tk.Label(options_frame, text="音だけ保存するならmp3,動画を保存するならmp4を選択\n")
+options_description_label.pack(side="top", fill="x",)
+
 mp3_var = tk.BooleanVar()
-mp3_check = tk.Checkbutton(root, text="Save as MP3", variable=mp3_var)
-mp3_check.grid(row=1, column=0, sticky="e")
-
-# Save as MP4
 mp4_var = tk.BooleanVar()
-mp4_check = tk.Checkbutton(root, text="Save as MP4", variable=mp4_var)
-mp4_check.grid(row=1, column=1, sticky="w")
+tk.Checkbutton(options_frame, text="Save as MP3", variable=mp3_var).pack(side="left", padx=10)
+tk.Checkbutton(options_frame, text="Save as MP4", variable=mp4_var).pack(side="left", padx=10)
+#------------------------
 
-# File name entry
-tk.Label(root, text="Save File As:").grid(row=2, column=0, sticky="e")
-file_name_entry = tk.Entry(root, width=50)
-file_name_entry.grid(row=2, column=1, padx=5, pady=5)
+# File Name Section------
+file_name_frame = LabelFrame(main_frame, text="File Name")
+file_name_frame.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky="ew")
 
-# Download button
-download_button = tk.Button(root, text="Download", command=download_video)
-download_button.grid(row=3, column=0, columnspan=2, pady=5)
+file_description_label = tk.Label(file_name_frame, text="保存するときの名前を決めてください\n")
+file_description_label.pack(side="top", fill="x",)
 
-# Add the download_for_anime button - Now placed below the Download button
-download_for_anime_button = tk.Button(root, text="Download for Anime", command=download_for_anime)
-download_for_anime_button.grid(row=4, column=0, columnspan=2, pady=5)  # Adjusted to be on a new line
+tk.Label(file_name_frame, text="Save File As:").pack(side="left")
+file_name_entry = tk.Entry(file_name_frame, width=50)
+file_name_entry.pack(side="left", padx=5)
+#-----------------------
 
+# Resolution Section----
+resolution_frame = LabelFrame(main_frame, text="Resolution")
+resolution_frame.grid(row=3, column=0, columnspan=2, padx=5, pady=5, sticky="ew")
 
-# The rest of your GUI setup remains unchanged
+resolution_description_label = tk.Label(resolution_frame, text="縦動画 : w1080,h1920\n横動画 : w1920,h1080\n")
+resolution_description_label.pack(side="top", fill="x",)
+
+tk.Label(resolution_frame, text=" Width:").pack(side="left")
+width_entry = tk.Entry(resolution_frame, width=10)
+width_entry.pack(side="left", padx=5)
+tk.Label(resolution_frame, text=" Height:").pack(side="left")
+height_entry = tk.Entry(resolution_frame, width=10)
+height_entry.pack(side="left", padx=5)
+#------------------------
+
+# Settings File Section--
+settings_frame = LabelFrame(main_frame, text="Settings")
+settings_frame.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky="ew")
+
+settings_description_label = tk.Label(settings_frame, text="Ebsynthを使う動画変換をするときはチェックしてください\n")
+settings_description_label.pack(side="top", fill="x",)
+
+create_settings_var = tk.BooleanVar()
+create_settings_check = tk.Checkbutton(settings_frame, text="Create Settings File", variable=create_settings_var)
+create_settings_check.pack(side="left", padx=5)
+#------------------------
+
+# Buttons
+# download_button = tk.Button(main_frame, text="Download", command=download_video)
+# download_button.grid(row=5, column=0, pady=5, sticky="ew")
+download_for_anime_button = tk.Button(main_frame, text="Download for Anime", command=download_for_anime)
+download_for_anime_button.grid(row=5, column=1, pady=5, sticky="ew")
+
 root.mainloop()
+

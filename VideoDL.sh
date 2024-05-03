@@ -8,7 +8,6 @@ VENV_DIR="venv"
 source $VENV_DIR/bin/activate
 
 # Pythonスクリプトを実行
-python3 videoDL2.py
+python video_download.py
 
-echo "Application has been executed successfully."
 read -p "Press enter to continue"
